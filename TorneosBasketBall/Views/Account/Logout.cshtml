@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@{
+    // Si está autenticado, mostramos un botón para cerrar sesión.
+}
+
+<form asp-action="Logout" method="post" asp-controller="Account">
+    <button type="submit" class="btn btn-link">Cerrar sesión</button>
+</form>
+
