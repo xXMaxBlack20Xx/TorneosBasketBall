@@ -25,7 +25,8 @@ namespace TorneosBasketBall.Models
 
         [Required]
         [StringLength(15)]
-        public required string Estado { get; set; }
+        public required string Estado { get; set; } = "Programado";
+
 
         public int? PuntuacionLocal { get; set; }
         public int? PuntuacionVisitante { get; set; }

@@ -35,6 +35,7 @@
                 <td>@item.PuntuacionLocal</td>
                 <td>@item.PuntuacionVisitante</td>
                 <td>
+                    <a asp-action="GenerateRoundRobin" class="btn btn-primary">Generate Round Robin</a>
                     <a asp-action="Edit" asp-route-id="@item.PartidoID" class="btn btn-sm btn-secondary">Edit</a>
                     <a asp-action="Details" asp-route-id="@item.PartidoID" class="btn btn-sm btn-info">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.PartidoID" class="btn btn-sm btn-danger">Delete</a>
