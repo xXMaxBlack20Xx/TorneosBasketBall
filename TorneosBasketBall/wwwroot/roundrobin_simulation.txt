@@ -1,0 +1,117 @@
+--- Ronda 1 ---
+Halcones (72) vs Fénix (51)
+Leones (61) vs Truenos (106)
+Tiburones (117) vs Spartans (112)
+Águilas (92) vs Cóndores (90)
+Pumas (67) vs Guerreros (79)
+Panteras (118) vs Dragones (53)
+Centauros (97) vs Titanes (100)
+
+--- Ronda 2 ---
+Halcones (51) vs Truenos (97)
+Fénix (56) vs Spartans (88)
+Leones (110) vs Cóndores (106)
+Tiburones (96) vs Guerreros (78)
+Águilas (91) vs Dragones (81)
+Pumas (97) vs Titanes (74)
+Panteras (106) vs Centauros (53)
+
+--- Ronda 3 ---
+Halcones (67) vs Spartans (51)
+Truenos (71) vs Cóndores (102)
+Fénix (60) vs Guerreros (114)
+Leones (94) vs Dragones (88)
+Tiburones (62) vs Titanes (96)
+Águilas (91) vs Centauros (102)
+Pumas (79) vs Panteras (82)
+
+--- Ronda 4 ---
+Halcones (80) vs Cóndores (109)
+Spartans (88) vs Guerreros (117)
+Truenos (93) vs Dragones (105)
+Fénix (61) vs Titanes (50)
+Leones (88) vs Centauros (116)
+Tiburones (60) vs Panteras (119)
+Águilas (120) vs Pumas (69)
+
+--- Ronda 5 ---
+Halcones (53) vs Guerreros (75)
+Cóndores (72) vs Dragones (82)
+Spartans (110) vs Titanes (64)
+Truenos (65) vs Centauros (73)
+Fénix (69) vs Panteras (67)
+Leones (52) vs Pumas (111)
+Tiburones (60) vs Águilas (112)
+
+--- Ronda 6 ---
+Halcones (64) vs Dragones (69)
+Guerreros (62) vs Titanes (75)
+Cóndores (65) vs Centauros (95)
+Spartans (64) vs Panteras (51)
+Truenos (73) vs Pumas (84)
+Fénix (96) vs Águilas (75)
+Leones (76) vs Tiburones (69)
+
+--- Ronda 7 ---
+Halcones (65) vs Titanes (118)
+Dragones (64) vs Centauros (80)
+Guerreros (98) vs Panteras (80)
+Cóndores (64) vs Pumas (86)
+Spartans (71) vs Águilas (87)
+Truenos (69) vs Tiburones (84)
+Fénix (83) vs Leones (104)
+
+--- Ronda 8 ---
+Halcones (78) vs Centauros (105)
+Titanes (100) vs Panteras (113)
+Dragones (88) vs Pumas (120)
+Guerreros (75) vs Águilas (53)
+Cóndores (108) vs Tiburones (85)
+Spartans (105) vs Leones (111)
+Truenos (110) vs Fénix (82)
+
+--- Ronda 9 ---
+Halcones (104) vs Panteras (69)
+Centauros (97) vs Pumas (78)
+Titanes (65) vs Águilas (96)
+Dragones (67) vs Tiburones (119)
+Guerreros (118) vs Leones (80)
+Cóndores (105) vs Fénix (85)
+Spartans (90) vs Truenos (83)
+
+--- Ronda 10 ---
+Halcones (94) vs Pumas (108)
+Panteras (110) vs Águilas (93)
+Centauros (65) vs Tiburones (83)
+Titanes (76) vs Leones (112)
+Dragones (111) vs Fénix (95)
+Guerreros (104) vs Truenos (96)
+Cóndores (50) vs Spartans (51)
+
+--- Ronda 11 ---
+Halcones (59) vs Águilas (82)
+Pumas (104) vs Tiburones (112)
+Panteras (63) vs Leones (95)
+Centauros (96) vs Fénix (101)
+Titanes (79) vs Truenos (86)
+Dragones (75) vs Spartans (82)
+Guerreros (71) vs Cóndores (104)
+
+--- Ronda 12 ---
+Halcones (55) vs Tiburones (109)
+Águilas (68) vs Leones (65)
+Pumas (82) vs Fénix (105)
+Panteras (55) vs Truenos (104)
+Centauros (53) vs Spartans (50)
+Titanes (70) vs Cóndores (65)
+Dragones (92) vs Guerreros (99)
+
+--- Ronda 13 ---
+Halcones (78) vs Leones (96)
+Tiburones (94) vs Fénix (51)
+Águilas (119) vs Truenos (57)
+Pumas (69) vs Spartans (101)
+Panteras (72) vs Cóndores (109)
+Centauros (102) vs Guerreros (84)
+Titanes (70) vs Dragones (107)
+

@@ -153,5 +153,86 @@ namespace TorneosBasketBall.Controllers
         {
             return _context.Partidos.Any(e => e.PartidoID == id);
         }
+        // GET: Equipoes/GenerateRoundRobin
+        public IActionResult GenerateRoundRobin()
+        {
+            // 1) Load all teams
+            var teams = _context.Equipos
+                                .OrderBy(e => e.EquipoID)
+                                .ToList();
+
+            // 2) Build a round‐robin schedule
+            var rounds = CreateRoundRobinSchedule(teams);
+
+            // 3) Simulate scores
+            var rnd = new Random();
+            var games = new List<Partidos>();
+            for (int r = 0; r < rounds.Count; r++)
+            {
+                foreach (var match in rounds[r])
+                {
+                    games.Add(new Partidos
+                    {
+                        EquipoLocalID = match.Item1.EquipoID,
+                        EquipoVisitanteID = match.Item2.EquipoID,
+                        FechaHora = DateTime.Today.AddDays(r),
+                        Estado = "Finalizado",
+                        PuntuacionLocal = rnd.Next(50, 121),
+                        PuntuacionVisitante = rnd.Next(50, 121)
+                    });
+                }
+            }
+
+            // 4) (Optional) write out a text file in wwwroot
+            var file = Path.Combine(Directory.GetCurrentDirectory(),
+                                    "wwwroot",
+                                    "roundrobin_simulation.txt");
+            using var writer = new StreamWriter(file);
+            for (int i = 0; i < rounds.Count; i++)
+            {
+                writer.WriteLine($"--- Ronda {i + 1} ---");
+                foreach (var match in rounds[i])
+                {
+                    var g = games[i * (teams.Count / 2) + rounds[i].IndexOf(match)];
+                    writer.WriteLine($"{match.Item1.NombreEquipo} ({g.PuntuacionLocal}) vs " +
+                                     $"{match.Item2.NombreEquipo} ({g.PuntuacionVisitante})");
+                }
+                writer.WriteLine();
+            }
+
+            // 5) Render a view listing them
+            return View("SimulatedRoundRobin", games);
+        }
+
+        /// <summary>
+        /// Simple “circle” algorithm for round-robin fixtures.
+        /// </summary>
+        private static List<List<(Equipo, Equipo)>> CreateRoundRobinSchedule(List<Equipo> teams)
+        {
+            if (teams.Count % 2 != 0)
+                teams.Add(new Equipo { EquipoID = 0, NombreEquipo = "BYE" });
+
+            int n = teams.Count;
+            var schedule = new List<List<(Equipo, Equipo)>>();
+            var rotating = teams.Skip(1).ToList();
+
+            for (int round = 0; round < n - 1; round++)
+            {
+                var matches = new List<(Equipo, Equipo)>();
+                matches.Add((teams[0], rotating.Last()));
+                for (int i = 1; i < n / 2; i++)
+                    matches.Add((rotating[i - 1], rotating[rotating.Count - 1 - i]));
+
+                schedule.Add(matches);
+
+                // rotate
+                var last = rotating.Last();
+                rotating.RemoveAt(rotating.Count - 1);
+                rotating.Insert(0, last);
+            }
+
+            return schedule;
+        }
     }
+
 }

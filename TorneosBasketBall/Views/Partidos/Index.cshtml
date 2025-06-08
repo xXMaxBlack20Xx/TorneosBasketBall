@@ -1,69 +1,45 @@
 ﻿@model IEnumerable<TorneosBasketBall.Models.Partidos>
 
 @{
-    // Esta línea fuerza el uso del layout por defecto
+    ViewData["Title"] = "Partidos";
     Layout = "_Layout";
-    ViewData["Title"] = "Index";
 }
 
-
-
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="GenerateRoundRobin" class="btn btn-warning">Generar Round-Robin</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-striped table-hover">
+    <thead class="table-dark">
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.EquipoLocalID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.EquipoVisitanteID)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.FechaHora)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Estado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PuntuacionLocal)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PuntuacionVisitante)
-            </th>
-            <th></th>
+            <th>@Html.DisplayNameFor(m => m.EquipoLocalID)</th>
+            <th>@Html.DisplayNameFor(m => m.EquipoVisitanteID)</th>
+            <th>@Html.DisplayNameFor(m => m.FechaHora)</th>
+            <th>@Html.DisplayNameFor(m => m.Estado)</th>
+            <th>@Html.DisplayNameFor(m => m.PuntuacionLocal)</th>
+            <th>@Html.DisplayNameFor(m => m.PuntuacionVisitante)</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipoLocalID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EquipoVisitanteID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FechaHora)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Estado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PuntuacionLocal)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PuntuacionVisitante)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PartidoID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PartidoID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PartidoID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.EquipoLocalID</td>
+                <td>@item.EquipoVisitanteID</td>
+                <td>@item.FechaHora.ToString("g")</td>
+                <td>@item.Estado</td>
+                <td>@item.PuntuacionLocal</td>
+                <td>@item.PuntuacionVisitante</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.PartidoID" class="btn btn-sm btn-secondary">Edit</a>
+                    <a asp-action="Details" asp-route-id="@item.PartidoID" class="btn btn-sm btn-info">Details</a>
+                    <a asp-action="Delete" asp-route-id="@item.PartidoID" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
