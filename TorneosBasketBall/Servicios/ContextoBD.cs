@@ -14,12 +14,10 @@ namespace TorneosBasketBall.Servicios
 
         public DbSet<Equipo> Equipos { get; set; }
         public DbSet<Jugador> Jugadores { get; set; }
-        public DbSet<Entrenador> Entrenadores { get; set; }
-        public DbSet<Partido> Partidos { get; set; }
-        public DbSet<Cancha> Canchas { get; set; }
-        public DbSet<Torneo> Torneos { get; set; }
+        public DbSet<Partidos> Partidos { get; set; }
+        public virtual DbSet<EstadisticasEquipos> EstadisticasEquipos { get; set; }
+
         //public DbSet<EstadisticaEquipo> EstadisticasEquipos { get; set; }
         public DbSet<Administrador> Administradores { get; set; }
     }
 }
-

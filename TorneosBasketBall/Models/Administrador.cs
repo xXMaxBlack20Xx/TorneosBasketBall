@@ -9,10 +9,10 @@ namespace TorneosBasketBall.Models
 
         [Required]
         [StringLength(50)]
-        public required string Usuario { get; set; }
+        public string Usuario { get; set; }
 
         [Required]
         [StringLength(255)]
-        public required string Contrasenia { get; set; }
+        public string Contrasenia { get; set; }
     }
 }

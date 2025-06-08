@@ -1,24 +1,24 @@
 ﻿// Models/Equipo.cs
-using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TorneosBasketBall.Models
 {
     public class Equipo
     {
+        [Key]
         public int EquipoID { get; set; }
+
+        [Required]
+        [StringLength(100)]
         public required string NombreEquipo { get; set; }
-        public int EntrenadorID { get; set; }
-        public required Entrenador Entrenador { get; set; }
-        public int TorneoID { get; set; }
-        public required Torneo Torneo { get; set; }
 
-        [InverseProperty(nameof(Partido.EquipoLocal))]
-        public ICollection<Partido> PartidosLocal { get; set; } = new List<Partido>();
+        // Estas columnas son opcionales según tu diseño (Allow Nulls marcado)
+        public int? EntrenadorID { get; set; }
 
-        [InverseProperty(nameof(Partido.EquipoVisitante))]
-        public ICollection<Partido> PartidosVisita { get; set; } = new List<Partido>();
+        [StringLength(100)]
+        public string? NombreEntrenador { get; set; }
 
-        public ICollection<Jugador> Jugadores { get; set; } = new List<Jugador>();
+        public int? PartidoID { get; set; }
     }
 }
