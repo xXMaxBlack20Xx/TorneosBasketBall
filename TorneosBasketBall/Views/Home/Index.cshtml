@@ -1,0 +1,128 @@
+﻿@model TorneosBasketBall.Models.DashboardViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Resumen General del Torneo";
+}
+
+<h2 class="mb-4">Resumen General del Torneo</h2>
+
+<!-- Equipos -->
+<h3>Equipos Registrados</h3>
+<table class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Entrenador</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var eq in Model.Equipos)
+        {
+            <tr>
+                <td>@eq.NombreEquipo</td>
+                <td>@eq.NombreEntrenador</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Jugadores -->
+<h3>Jugadores</h3>
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Posición</th>
+            <th>N° Camiseta</th>
+            <th>Equipo</th>
+            <th>Activo</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var jug in Model.Jugadores)
+        {
+            <tr>
+                <td>@jug.NombreCompleto</td>
+                <td>@jug.Edad</td>
+                <td>@jug.Posicion</td>
+                <td>@jug.NumeroCamiseta</td>
+                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == jug.EquipoID)?.NombreEquipo</td>
+                <td>
+                    @if (jug.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactivo</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Partidos -->
+<h3>Partidos</h3>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Fecha/Hora</th>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Puntuación</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Partidos)
+        {
+            <tr>
+                <td>@p.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == p.EquipoLocalID)?.NombreEquipo</td>
+                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == p.EquipoVisitanteID)?.NombreEquipo</td>
+                <td>
+                    @if (p.PuntuacionLocal != null && p.PuntuacionVisitante != null)
+                    {
+                        @($"{p.PuntuacionLocal} - {p.PuntuacionVisitante}")
+                    }
+                    else
+                    {
+                        <span class="text-muted">Pendiente</span>
+                    }
+                </td>
+                <td>@p.Estado</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Estadísticas -->
+<h3>Estadísticas por Equipo</h3>
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Equipo</th>
+            <th>Jugados</th>
+            <th>Ganados</th>
+            <th>Perdidos</th>
+            <th>Puntos a Favor</th>
+            <th>Puntos en Contra</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var est in Model.Estadisticas)
+        {
+            <tr>
+                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == est.EquipoID)?.NombreEquipo</td>
+                <td>@est.PartidosJugados</td>
+                <td>@est.Ganados</td>
+                <td>@est.Perdidos</td>
+                <td>@est.PuntosFavor</td>
+                <td>@est.PuntosContra</td>
+            </tr>
+        }
+    </tbody>
+</table>
