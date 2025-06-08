@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TorneosBasketBall.Models
 {
+    [Table("Administrador")] // Move the Table attribute to the class declaration  
     public class Administrador
     {
         [Key]
@@ -9,10 +11,10 @@ namespace TorneosBasketBall.Models
 
         [Required]
         [StringLength(50)]
-        public string Usuario { get; set; }
+        public required string Usuario { get; set; }
 
         [Required]
         [StringLength(255)]
-        public string Contrasenia { get; set; }
+        public required string Contrasenia { get; set; }
     }
 }

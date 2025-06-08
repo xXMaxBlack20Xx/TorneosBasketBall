@@ -1,0 +1,31 @@
+﻿@model IEnumerable<TorneosBasketBall.Models.Equipo>
+
+@{
+    ViewData["Title"] = "Ver equipos (Solo lectura)";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre Equipo</th>
+            <th>EntrenadorID</th>
+            <th>NombreEntrenador</th>
+            <th>PartidoID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var equipo in Model)
+        {
+            <tr>
+                <td>@equipo.EquipoID</td>
+                <td>@equipo.NombreEquipo</td>
+                <td>@equipo.EntrenadorID</td>
+                <td>@equipo.NombreEntrenador</td>
+                <td>@equipo.PartidoID</td>
+            </tr>
+        }
+    </tbody>
+</table>

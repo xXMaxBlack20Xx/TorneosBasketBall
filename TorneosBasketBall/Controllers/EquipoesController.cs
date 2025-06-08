@@ -19,15 +19,29 @@ namespace TorneosBasketBall.Controllers
             _context = context;
         }
 
+        // ======================
+        // MÉTODO DE AUTORIZACIÓN
+        // ======================
+        private bool IsAdminLogged()
+        {
+            return HttpContext.Session.GetInt32("AdminID") != null;
+        }
+
         // GET: Equipoes
         public async Task<IActionResult> Index()
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             return View(await _context.Equipos.ToListAsync());
         }
 
         // GET: Equipoes/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             if (id == null)
             {
                 return NotFound();
@@ -46,16 +60,20 @@ namespace TorneosBasketBall.Controllers
         // GET: Equipoes/Create
         public IActionResult Create()
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             return View();
         }
 
         // POST: Equipoes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EquipoID,NombreEquipo,EntrenadorID,NombreEntrenador,PartidoID")] Equipo equipo)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             if (ModelState.IsValid)
             {
                 _context.Add(equipo);
@@ -68,6 +86,9 @@ namespace TorneosBasketBall.Controllers
         // GET: Equipoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             if (id == null)
             {
                 return NotFound();
@@ -82,12 +103,13 @@ namespace TorneosBasketBall.Controllers
         }
 
         // POST: Equipoes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EquipoID,NombreEquipo,EntrenadorID,NombreEntrenador,PartidoID")] Equipo equipo)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             if (id != equipo.EquipoID)
             {
                 return NotFound();
@@ -119,6 +141,9 @@ namespace TorneosBasketBall.Controllers
         // GET: Equipoes/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             if (id == null)
             {
                 return NotFound();
@@ -139,6 +164,9 @@ namespace TorneosBasketBall.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsAdminLogged())
+                return RedirectToAction("Index", "Login");
+
             var equipo = await _context.Equipos.FindAsync(id);
             if (equipo != null)
             {
@@ -152,6 +180,13 @@ namespace TorneosBasketBall.Controllers
         private bool EquipoExists(int id)
         {
             return _context.Equipos.Any(e => e.EquipoID == id);
+        }
+
+        // Método para mostrar equipos en modo de solo lectura
+        public async Task<IActionResult> ReadOnly()
+        {
+            var equipos = await _context.Equipos.ToListAsync();
+            return View(equipos);
         }
     }
 }

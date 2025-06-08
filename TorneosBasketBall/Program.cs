@@ -9,39 +9,27 @@ var builder = WebApplication.CreateBuilder(args);
 
 // 1) DbContext  
 builder.Services.AddDbContext<ContextoBD>(options =>
-   options.UseSqlServer(
-     builder.Configuration.GetConnectionString("DefaultConnection")
-   )
+  options.UseSqlServer(
+    builder.Configuration.GetConnectionString("DefaultConnection")
+  )
 );
 builder.Services.AddControllersWithViews();
 
-// 2) Identity  
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+// 2) Autenticación y Autorización  
+builder.Services.AddSession(options =>
 {
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = false;
-})
-   .AddEntityFrameworkStores<ContextoBD>()
-   .AddDefaultTokenProviders();
-
-// 3) Cookie settings redirigir a /Account/Login  
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.LoginPath = "/Account/Login";
-    options.AccessDeniedPath = "/Account/Login";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
 });
-
-// 4) MVC + Razor Pages (para las vistas de IdentityUI)  
-builder.Services.AddControllersWithViews();
-builder.Services.AddRazorPages();
-
-/**************************************************************/
 
 // Add services to the container.  
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 var app = builder.Build();
+
+app.UseSession(); // Moved after 'app' is declared  
 
 // Middlewares de autenticación/autorization  
 app.UseAuthentication();
@@ -57,8 +45,8 @@ if (!app.Environment.IsDevelopment())
 
 // Default route apuntando al Login  
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}"
+   name: "default",
+   pattern: "{controller=Account}/{action=Login}/{id?}"
 );
 
 // Mapear Razor Pages (IdentityUI)  
@@ -72,8 +60,10 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-   name: "default",
-   pattern: "{controller=Home}/{action=Index}/{id?}")
-   .WithStaticAssets();
+  name: "default",
+  pattern: "{controller=Home}/{action=Index}/{id?}")
+  .WithStaticAssets();
+
+app.UseStaticFiles();
 
 app.Run();
