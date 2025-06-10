@@ -1,48 +1,101 @@
-﻿@model IEnumerable<TorneosBasketBall.Models.Partidos>
+﻿@* Remove @model IEnumerable<TorneosBasketBall.Models.Partidos> *@
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Partidos";
+
+    // Cast ViewBag data to the correct types
+    var otherGames = ViewBag.OtherGames as List<TorneosBasketBall.Models.Partidos>;
+    var finalGame = ViewBag.FinalGame as TorneosBasketBall.Models.Partidos;
 }
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="GenerateRoundRobin" method="post" class="d-inline">
-    <button type="submit" class="btn btn-warning">New Round Robin</button>
-</form>
-<form asp-action="ComputePlayoffs" method="post" class="d-inline ms-2">
-    <button type="submit" class="btn btn-success">Compute Playoffs</button>
-</form>
-<form asp-action="ComputeFinal" method="post" class="d-inline ms-2">
-    <button type="submit" class="btn btn-danger">Generate Final</button>
-</form>
+<div class="d-flex mb-3">
+    <form asp-action="GenerateRoundRobin" method="post" class="me-2">
+        <button type="submit" class="btn btn-warning">New Round Robin</button>
+    </form>
+    <form asp-action="ComputePlayoffs" method="post" class="me-2">
+        <button type="submit" class="btn btn-success">Compute Playoffs</button>
+    </form>
+    <form asp-action="ComputeFinal" method="post" class="me-2">
+        <button type="submit" class="btn btn-danger">Generate Final</button>
+    </form>
+</div>
 
-<table class="table table-striped mt-3">
-    <thead class="table-dark">
-        <tr>
-            <th>#</th>
-            <th>Local</th>
-            <th>Visitante</th>
-            <th>Fecha</th>
-            <th>Estado</th>
-            <th>Score</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
+@if (otherGames != null && otherGames.Any())
+{
+    <h2>All Other Games</h2>
+    <table class="table table-striped mt-3">
+        <thead class="table-dark">
             <tr>
-                <td>@p.PartidoID</td>
-                <td>@p.EquipoLocalID</td>
-                <td>@p.EquipoVisitanteID</td>
-                <td>@p.FechaHora:d</td>
-                <td>@p.Estado</td>
-                <td>@(p.PuntuacionLocal?.ToString() ?? "-") – @(p.PuntuacionVisitante?.ToString() ?? "-")</td>
+                <th>#</th>
+                <th>Local</th>
+                <th>Visitante</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var p in otherGames)
+            {
+                <tr>
+                    <td>@p.PartidoID</td>
+                    <td>@p.EquipoLocal.NombreEquipo</td> @* Display Team Name *@
+                    <td>@p.EquipoVisitante.NombreEquipo</td> @* Display Team Name *@
+                    <td>@p.FechaHora.ToString("d")</td> @* Corrected date format *@
+                    <td>@p.Estado</td>
+                    <td>@(p.PuntuacionLocal?.ToString() ?? "-") – @(p.PuntuacionVisitante?.ToString() ?? "-")</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@p.PartidoID" class="btn btn-sm btn-secondary">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@p.PartidoID" class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No other games to display.</p>
+}
+
+@* --- Display the Championship Final Separately --- *@
+<hr />
+@if (finalGame != null)
+{
+    <h2 class="mt-4 text-danger">Championship Final!</h2>
+    <table class="table table-striped mt-3">
+        <thead class="table-danger">
+            @* Distinct header color for final *@
+            <tr>
+                <th>#</th>
+                <th>Local</th>
+                <th>Visitante</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+                <th>Score</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@finalGame.PartidoID</td>
+                <td>@finalGame.EquipoLocal.NombreEquipo</td>
+                <td>@finalGame.EquipoVisitante.NombreEquipo</td>
+                <td>@finalGame.FechaHora.ToString("d")</td>
+                <td>@finalGame.Estado</td>
+                <td>@(finalGame.PuntuacionLocal?.ToString() ?? "-") – @(finalGame.PuntuacionVisitante?.ToString() ?? "-")</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@p.PartidoID" class="btn btn-sm btn-secondary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@p.PartidoID" class="btn btn-sm btn-danger">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@finalGame.PartidoID" class="btn btn-sm btn-secondary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@finalGame.PartidoID" class="btn btn-sm btn-danger">Delete</a>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="mt-4">No Championship Final game has been generated yet.</p>
+}

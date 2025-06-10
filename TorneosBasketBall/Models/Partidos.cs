@@ -12,13 +12,13 @@ namespace TorneosBasketBall.Models
         [Required]
         public int EquipoLocalID { get; set; }
         // Puedes agregar navegación si quieres: 
-        // [ForeignKey(nameof(EquipoLocalID))]
-        // public Equipo EquipoLocal { get; set; }
+        [ForeignKey(nameof(EquipoLocalID))]
+        public Equipo EquipoLocal { get; set; }
 
         [Required]
         public int EquipoVisitanteID { get; set; }
-        // [ForeignKey(nameof(EquipoVisitanteID))]
-        // public Equipo EquipoVisitante { get; set; }
+        [ForeignKey(nameof(EquipoVisitanteID))]
+        public Equipo EquipoVisitante { get; set; }
 
         [Required]
         public DateTime FechaHora { get; set; }
