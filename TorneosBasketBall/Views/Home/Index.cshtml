@@ -1,17 +1,31 @@
 ﻿@model TorneosBasketBall.Models.DashboardViewModel
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "Resumen General del Torneo";
+    ViewData["Title"] = "Tablero General del Torneo";
 
-    int page       = ViewBag.CurrentPage;
+    //Equipos
+    int page = ViewBag.CurrentPage;
     int totalPages = ViewBag.TotalPages;
     int selectedEquipo = ViewBag.EquipoSeleccionado ?? 0;
-
-    // La lista paginada ya viene en Model.Equipos
     var pagedEquipos = Model.Equipos;
+
+    //Jugadores
+    const int playersPageSize = 5;
+    var jugPageQuery = ViewContext.HttpContext.Request.Query["jugPage"].ToString();
+    int jugPage = 1;
+    if (!string.IsNullOrEmpty(jugPageQuery) && int.TryParse(jugPageQuery, out var jp))
+    {
+        jugPage = jp;
+    }
+    int totalJugadores = Model.Jugadores.Count;
+    int totalJugPages = (int)Math.Ceiling(totalJugadores / (double)playersPageSize);
+    var pagedJugadores = Model.Jugadores
+        .Skip((jugPage - 1) * playersPageSize)
+        .Take(playersPageSize)
+        .ToList();
 }
 
-<h2 class="mb-4">Resumen General del Torneo</h2>
+<h2 class="mb-4">Tablero General del Torneo</h2>
 
 <form method="get" class="mb-4">
     <div class="row g-2 align-items-end">
@@ -88,36 +102,100 @@
     </ul>
 </nav>
 
-<h3>Jugadores</h3>
+<h3 class="mt-5">Jugadores</h3>
 <table class="table table-sm table-bordered">
     <thead>
         <tr>
-            <th>Nombre</th><th>Edad</th><th>Posición</th><th>N° Camiseta</th><th>Equipo</th><th>Activo</th>
+            <th>Nombre</th>
+            <th>Edad</th>
+            <th>Posición</th>
+            <th>N° Camiseta</th>
+            <th>Equipo</th>
+            <th>Activo</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var jug in Model.Jugadores)
+        @foreach (var jug in pagedJugadores)
         {
             <tr>
                 <td>@jug.NombreCompleto</td>
                 <td>@jug.Edad</td>
                 <td>@jug.Posicion</td>
                 <td>@jug.NumeroCamiseta</td>
-                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == jug.EquipoID)?.NombreEquipo</td>
+                <td>@Model.AllEquipos.FirstOrDefault(x => x.EquipoID == jug.EquipoID)?.NombreEquipo</td>
                 <td>
-                    @if (jug.Estado) { <span class="badge bg-success">Activo</span> }
-                    else            { <span class="badge bg-secondary">Inactivo</span> }
+                    @if (jug.Estado)
+                    {
+                        <span class="badge bg-success">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">Inactivo</span>
+                    }
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<nav aria-label="Paginación Jugadores">
+    <ul class="pagination">
+        <li class="page-item @(jugPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action(
+             "Index",
+             "Home",
+             new {
+               page      = page - 1,
+               equipoId  = selectedEquipo,
+               jugPage   = jugPage - 1
+             })">
+                Anterior
+            </a>
+        </li>
+
+        @for (int j = 1; j <= totalJugPages; j++)
+        {
+            <li class="page-item @(j == jugPage ? "active" : "")">
+                <a class="page-link"
+                   href="@Url.Action(
+               "Index",
+               "Home",
+               new {
+                 page      = page,
+                 equipoId  = selectedEquipo,
+                 jugPage   = j
+               })">
+                    @j
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(jugPage == totalJugPages ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action(
+             "Index",
+             "Home",
+             new {
+               page      = page + 1,
+               equipoId  = selectedEquipo,
+               jugPage   = jugPage + 1
+             })">
+                Siguiente
+            </a>
+        </li>
+    </ul>
+</nav>
+
 <h3>Partidos</h3>
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Fecha/Hora</th><th>Local</th><th>Visitante</th><th>Puntuación</th><th>Estado</th>
+            <th>Fecha/Hora</th>
+            <th>Local</th>
+            <th>Visitante</th>
+            <th>Puntuación</th>
+            <th>Estado</th>
         </tr>
     </thead>
     <tbody>
@@ -147,7 +225,12 @@
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Equipo</th><th>Jugados</th><th>Ganados</th><th>Perdidos</th><th>Puntos a Favor</th><th>Puntos en Contra</th>
+            <th>Equipo</th>
+            <th>Jugados</th>
+            <th>Ganados</th>
+            <th>Perdidos</th>
+            <th>Puntos a Favor</th>
+            <th>Puntos en Contra</th>
         </tr>
     </thead>
     <tbody>
