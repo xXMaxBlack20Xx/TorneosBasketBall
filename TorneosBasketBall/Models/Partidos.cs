@@ -11,26 +11,23 @@ namespace TorneosBasketBall.Models
 
         [Required]
         public int EquipoLocalID { get; set; }
-        // Puedes agregar navegación si quieres: 
         [ForeignKey(nameof(EquipoLocalID))]
-        public Equipo EquipoLocal { get; set; }
+        public Equipo? EquipoLocal { get; set; }     // nullable
 
         [Required]
         public int EquipoVisitanteID { get; set; }
         [ForeignKey(nameof(EquipoVisitanteID))]
-        public Equipo EquipoVisitante { get; set; }
+        public Equipo? EquipoVisitante { get; set; } // nullable
 
         [Required]
         public DateTime FechaHora { get; set; }
 
         [Required]
         [StringLength(15)]
-        public required string Estado { get; set; } = "Programado";
-
+        public string Estado { get; set; } = "Programado";
 
         public int? PuntuacionLocal { get; set; }
         public int? PuntuacionVisitante { get; set; }
-
-
     }
+
 }

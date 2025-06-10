@@ -1,4 +1,5 @@
 ﻿@model TorneosBasketBall.Models.Partidos
+
 @{
     Layout = "_Layout";
     ViewData["Title"] = "Edit Partido";
@@ -6,40 +7,55 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<form asp-action="Edit">
+<form asp-action="Edit" asp-route-id="@Model.PartidoID" method="post">
+    @Html.AntiForgeryToken()
     <input type="hidden" asp-for="PartidoID" />
 
     <div class="mb-3">
         <label asp-for="EquipoLocalID" class="form-label"></label>
-        <input asp-for="EquipoLocalID" class="form-control" />
+        <select asp-for="EquipoLocalID"
+                asp-items="ViewBag.LocalList"
+                class="form-select">
+            <option value="">-- Select Local --</option>
+        </select>
+        <span asp-validation-for="EquipoLocalID" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="EquipoVisitanteID" class="form-label"></label>
-        <input asp-for="EquipoVisitanteID" class="form-control" />
+        <select asp-for="EquipoVisitanteID"
+                asp-items="ViewBag.VisitaList"
+                class="form-select">
+            <option value="">-- Select Visitante --</option>
+        </select>
+        <span asp-validation-for="EquipoVisitanteID" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="FechaHora" class="form-label"></label>
         <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+        <span asp-validation-for="FechaHora" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="Estado" class="form-label"></label>
         <select asp-for="Estado" class="form-select">
-            <option>Programado</option>
-            <option>Finalizado</option>
+            <option value="Programado">Programado</option>
+            <option value="Finalizado">Finalizado</option>
         </select>
+        <span asp-validation-for="Estado" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="PuntuacionLocal" class="form-label"></label>
         <input asp-for="PuntuacionLocal" class="form-control" />
+        <span asp-validation-for="PuntuacionLocal" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="PuntuacionVisitante" class="form-label"></label>
         <input asp-for="PuntuacionVisitante" class="form-control" />
+        <span asp-validation-for="PuntuacionVisitante" class="text-danger"></span>
     </div>
 
     <button type="submit" class="btn btn-primary">Save</button>
