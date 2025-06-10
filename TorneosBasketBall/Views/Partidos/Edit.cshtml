@@ -1,56 +1,47 @@
 ﻿@model TorneosBasketBall.Models.Partidos
-
 @{
-    ViewData["Title"] = "Edit";
+    Layout = "_Layout";
+    ViewData["Title"] = "Edit Partido";
 }
 
-<h1>Edit</h1>
+<h1>@ViewData["Title"]</h1>
 
-<h4>Partidos</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="PartidoID" />
-            <div class="form-group">
-                <label asp-for="EquipoLocalID" class="control-label"></label>
-                <input asp-for="EquipoLocalID" class="form-control" />
-                <span asp-validation-for="EquipoLocalID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EquipoVisitanteID" class="control-label"></label>
-                <input asp-for="EquipoVisitanteID" class="form-control" />
-                <span asp-validation-for="EquipoVisitanteID" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FechaHora" class="control-label"></label>
-                <input asp-for="FechaHora" class="form-control" />
-                <span asp-validation-for="FechaHora" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Estado" class="control-label"></label>
-                <input asp-for="Estado" class="form-control" />
-                <span asp-validation-for="Estado" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PuntuacionLocal" class="control-label"></label>
-                <input asp-for="PuntuacionLocal" class="form-control" />
-                <span asp-validation-for="PuntuacionLocal" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PuntuacionVisitante" class="control-label"></label>
-                <input asp-for="PuntuacionVisitante" class="form-control" />
-                <span asp-validation-for="PuntuacionVisitante" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+<form asp-action="Edit">
+    <input type="hidden" asp-for="PartidoID" />
+
+    <div class="mb-3">
+        <label asp-for="EquipoLocalID" class="form-label"></label>
+        <input asp-for="EquipoLocalID" class="form-control" />
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div class="mb-3">
+        <label asp-for="EquipoVisitanteID" class="form-label"></label>
+        <input asp-for="EquipoVisitanteID" class="form-control" />
+    </div>
 
+    <div class="mb-3">
+        <label asp-for="FechaHora" class="form-label"></label>
+        <input asp-for="FechaHora" type="datetime-local" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Estado" class="form-label"></label>
+        <select asp-for="Estado" class="form-select">
+            <option>Programado</option>
+            <option>Finalizado</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PuntuacionLocal" class="form-label"></label>
+        <input asp-for="PuntuacionLocal" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PuntuacionVisitante" class="form-label"></label>
+        <input asp-for="PuntuacionVisitante" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary ms-2">Cancel</a>
+</form>

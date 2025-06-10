@@ -1,17 +1,24 @@
 ﻿@model IEnumerable<TorneosBasketBall.Models.EstadisticasEquipos>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Team Statistics"; // Updated title for clarity
 }
 
-<h1>Index</h1>
+<h1>Team Statistics</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create">Create New</a> |
+    <form asp-controller="EstadisticasEquipos" asp-action="ComputeStatistics" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-sm btn-primary">Compute Team Statistics</button>
+    </form>
 </p>
+
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Equipo)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.PartidosJugados)
             </th>
@@ -27,39 +34,37 @@
             <th>
                 @Html.DisplayNameFor(model => model.PuntosContra)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Equipo)
-            </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.PartidosJugados)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ganados)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Perdidos)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PuntosFavor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PuntosContra)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Equipo.NombreEquipo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.EquipoID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.EquipoID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EquipoID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Equipo.NombreEquipo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartidosJugados)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ganados)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Perdidos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PuntosFavor)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PuntosContra)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EquipoID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.EquipoID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EquipoID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

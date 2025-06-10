@@ -22,6 +22,7 @@ namespace TorneosBasketBall.Controllers
         // GET: EstadisticasEquipos
         public async Task<IActionResult> Index()
         {
+            // Include the Equipo navigation property to get team names
             var contextoBD = _context.EstadisticasEquipos.Include(e => e.Equipo);
             return View(await contextoBD.ToListAsync());
         }
@@ -35,7 +36,7 @@ namespace TorneosBasketBall.Controllers
             }
 
             var estadisticasEquipos = await _context.EstadisticasEquipos
-                .Include(e => e.Equipo)
+                .Include(e => e.Equipo) // Include the Equipo navigation property
                 .FirstOrDefaultAsync(m => m.EquipoID == id);
             if (estadisticasEquipos == null)
             {
@@ -53,8 +54,6 @@ namespace TorneosBasketBall.Controllers
         }
 
         // POST: EstadisticasEquipos/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("EquipoID,PartidosJugados,Ganados,Perdidos,PuntosFavor,PuntosContra")] EstadisticasEquipos estadisticasEquipos)
@@ -87,8 +86,6 @@ namespace TorneosBasketBall.Controllers
         }
 
         // POST: EstadisticasEquipos/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("EquipoID,PartidosJugados,Ganados,Perdidos,PuntosFavor,PuntosContra")] EstadisticasEquipos estadisticasEquipos)
@@ -159,6 +156,78 @@ namespace TorneosBasketBall.Controllers
         private bool EstadisticasEquiposExists(int id)
         {
             return _context.EstadisticasEquipos.Any(e => e.EquipoID == id);
+        }
+
+        // New action to compute and fill statistics
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ComputeStatistics()
+        {
+            // Clear existing statistics
+            _context.EstadisticasEquipos.RemoveRange(_context.EstadisticasEquipos);
+            await _context.SaveChangesAsync();
+
+            // Get all teams
+            var teams = await _context.Equipos.ToListAsync();
+
+            foreach (var team in teams)
+            {
+                var teamId = team.EquipoID;
+
+                // Calculate statistics for the current team
+                var partidosJugados = await _context.Partidos
+                    .CountAsync(p => p.Estado == "Finalizado" &&
+                                     (p.EquipoLocalID == teamId || p.EquipoVisitanteID == teamId));
+
+                var ganados = await _context.Partidos
+                    .CountAsync(p => p.Estado == "Finalizado" &&
+                                     ((p.EquipoLocalID == teamId && p.PuntuacionLocal > p.PuntuacionVisitante) ||
+                                      (p.EquipoVisitanteID == teamId && p.PuntuacionVisitante > p.PuntuacionLocal)));
+
+                var perdidos = await _context.Partidos
+                    .CountAsync(p => p.Estado == "Finalizado" &&
+                                     ((p.EquipoLocalID == teamId && p.PuntuacionLocal < p.PuntuacionVisitante) ||
+                                      (p.EquipoVisitanteID == teamId && p.PuntuacionVisitante < p.PuntuacionLocal)));
+
+                var puntosFavor = await _context.Partidos
+                    .Where(p => p.Estado == "Finalizado" && p.EquipoLocalID == teamId)
+                    .SumAsync(p => (int?)p.PuntuacionLocal) ?? 0;
+                puntosFavor += await _context.Partidos
+                    .Where(p => p.Estado == "Finalizado" && p.EquipoVisitanteID == teamId)
+                    .SumAsync(p => (int?)p.PuntuacionVisitante) ?? 0;
+
+                var puntosContra = await _context.Partidos
+                    .Where(p => p.Estado == "Finalizado" && p.EquipoLocalID == teamId)
+                    .SumAsync(p => (int?)p.PuntuacionVisitante) ?? 0;
+                puntosContra += await _context.Partidos
+                    .Where(p => p.Estado == "Finalizado" && p.EquipoVisitanteID == teamId)
+                    .SumAsync(p => (int?)p.PuntuacionLocal) ?? 0;
+
+
+                // Create or update EstadisticasEquipos entry
+                var estadisticas = await _context.EstadisticasEquipos
+                                         .FirstOrDefaultAsync(e => e.EquipoID == teamId);
+
+                if (estadisticas == null)
+                {
+                    estadisticas = new EstadisticasEquipos
+                    {
+                        EquipoID = teamId,
+                        Equipo = team // <--- FIX: Assign the 'team' object here
+                    };
+                    _context.EstadisticasEquipos.Add(estadisticas);
+                }
+
+                estadisticas.PartidosJugados = partidosJugados;
+                estadisticas.Ganados = ganados;
+                estadisticas.Perdidos = perdidos;
+                estadisticas.PuntosFavor = puntosFavor;
+                estadisticas.PuntosContra = puntosContra;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

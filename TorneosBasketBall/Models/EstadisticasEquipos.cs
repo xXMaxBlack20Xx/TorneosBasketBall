@@ -7,7 +7,7 @@ namespace TorneosBasketBall.Models
     {
         [Key]
         [ForeignKey("Equipo")]
-        public int EquipoID { get; set; }
+        public int EquipoID { get; set; } // This is the PK and FK, NOT auto-incremented by DB
 
         public int PartidosJugados { get; set; }
         public int Ganados { get; set; }
@@ -15,7 +15,6 @@ namespace TorneosBasketBall.Models
         public int PuntosFavor { get; set; }
         public int PuntosContra { get; set; }
 
-        // Relación de navegación (opcional)
         public required Equipo Equipo { get; set; }
     }
 }

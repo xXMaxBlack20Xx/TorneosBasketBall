@@ -30,5 +30,7 @@ namespace TorneosBasketBall.Models
 
         public int? PuntuacionLocal { get; set; }
         public int? PuntuacionVisitante { get; set; }
+
+
     }
 }

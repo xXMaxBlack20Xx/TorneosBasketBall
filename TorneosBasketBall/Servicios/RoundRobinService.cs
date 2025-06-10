@@ -1,53 +1,65 @@
-﻿using TorneosBasketBall.Models; // Adjust namespace to match your project
-using System;
+﻿using System;
 using System.Collections.Generic;
+using TorneosBasketBall.Models;
 
 namespace TorneosBasketBall.Services
 {
     public class RoundRobinService
     {
+        private Random _random = new Random();
+
+        /// <summary>
+        /// Generates a single-round robin schedule (each team plays each other once).
+        /// </summary>
         public List<Partidos> GenerateRoundRobin(List<int> equipoIds, DateTime startDate)
         {
             var partidos = new List<Partidos>();
-            int numEquipos = equipoIds.Count;
-            bool isOdd = numEquipos % 2 != 0;
-
+            int n = equipoIds.Count;
+            bool isOdd = n % 2 != 0;
             if (isOdd)
             {
-                equipoIds.Add(-1); // Dummy team ID
-                numEquipos++;
+                equipoIds.Add(-1); // bye placeholder
+                n++;
             }
 
-            int numJornadas = numEquipos - 1;
-            int partidosPorJornada = numEquipos / 2;
+            int rounds = n - 1;
+            int matchesPerRound = n / 2;
+            var teams = new List<int>(equipoIds);
 
-            var equipos = new List<int>(equipoIds);
-            DateTime fecha = startDate;
-
-            for (int ronda = 0; ronda < numJornadas; ronda++)
+            for (int round = 0; round < rounds; round++)
             {
-                for (int i = 0; i < partidosPorJornada; i++)
+                DateTime matchDate = startDate.AddDays(round);
+                for (int i = 0; i < matchesPerRound; i++)
                 {
-                    int local = equipos[i];
-                    int visitante = equipos[numEquipos - 1 - i];
+                    int home = teams[i];
+                    int away = teams[n - 1 - i];
+                    if (home == -1 || away == -1) continue;
 
-                    if (local == -1 || visitante == -1)
-                        continue;
+                    // Generate random scores
+                    int homeScore = _random.Next(70, 120); // Example: scores between 70 and 119
+                    int awayScore = _random.Next(70, 120);
+
+                    // Ensure there's a winner or a tie for simplicity for now
+                    if (homeScore == awayScore)
+                    {
+                        if (_random.Next(0, 2) == 0) homeScore++; // Randomly make one team win if tied
+                        else awayScore++;
+                    }
 
                     partidos.Add(new Partidos
                     {
-                        EquipoLocalID = local,
-                        EquipoVisitanteID = visitante,
-                        FechaHora = fecha.AddDays(ronda),
-                        Estado = "Programado",
-                        PuntuacionLocal = null,
-                        PuntuacionVisitante = null
+                        EquipoLocalID = home,
+                        EquipoVisitanteID = away,
+                        FechaHora = matchDate,
+                        Estado = "Finalizado", // Mark as finished since scores are generated
+                        PuntuacionLocal = homeScore,
+                        PuntuacionVisitante = awayScore
                     });
                 }
-
-                var temp = equipos[1];
-                equipos.RemoveAt(1);
-                equipos.Add(temp);
+                // rotate
+                int last = teams[teams.Count - 1];
+                teams.RemoveAt(teams.Count - 1);
+                teams.Insert(1, last);
             }
 
             return partidos;
