@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Panel de Administración";
+
+    // Lista de tarjetas
+    var cards = new List<TorneosBasketBall.Models.AdminCardModel>
+    {
+        new() {
+          Controller = "Equipoes",
+          Action     = "Index",
+          IconClass  = "bi bi-people-fill",
+          Title      = "Gestionar Equipos",
+          BtnClass   = "btn-primary",
+          Description= "Añade, edita o elimina equipos del torneo."
+        },
+        new() {
+          Controller = "Jugadors",
+          Action     = "Index",
+          IconClass  = "bi bi-person-badge-fill",
+          Title      = "Gestionar Jugadores",
+          BtnClass   = "btn-success",
+          Description= "Administra la plantilla de jugadores."
+        },
+        new() {
+          Controller = "Partidos",
+          Action     = "Index",
+          IconClass  = "bi bi-clock-fill",
+          Title      = "Gestionar Partidos",
+          BtnClass   = "btn-warning",
+          Description= "Agenda, modifica o borra encuentros."
+        },
+        new() {
+          Controller = "EstadisticasEquipos",
+          Action     = "Index",
+          IconClass  = "bi bi-bar-chart-fill",
+          Title      = "Ver Estadísticas",
+          BtnClass   = "btn-info",
+          Description= "Consulta estadísticas por equipo."
+        },
+    };
+}
+
+<div class="container my-5">
+    <h2 class="text-center mb-5">Panel de Administración</h2>
+    <div class="row gy-4 justify-content-center">
+        @foreach (var card in cards)
+        {
+            @await Html.PartialAsync("_AdminCard", card)
+        }
+    </div>
+</div>

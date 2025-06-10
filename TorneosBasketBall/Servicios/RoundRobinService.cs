@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using TorneosBasketBall.Models;
+﻿using TorneosBasketBall.Models;
 
 namespace TorneosBasketBall.Services
 {
     public class RoundRobinService
     {
         private Random _random = new Random();
-
-        /// <summary>
-        /// Generates a single-round robin schedule (each team plays each other once).
-        /// </summary>
         public List<Partidos> GenerateRoundRobin(List<int> equipoIds, DateTime startDate)
         {
             var partidos = new List<Partidos>();
@@ -18,7 +12,7 @@ namespace TorneosBasketBall.Services
             bool isOdd = n % 2 != 0;
             if (isOdd)
             {
-                equipoIds.Add(-1); // bye placeholder
+                equipoIds.Add(-1);
                 n++;
             }
 
@@ -35,14 +29,12 @@ namespace TorneosBasketBall.Services
                     int away = teams[n - 1 - i];
                     if (home == -1 || away == -1) continue;
 
-                    // Generate random scores
-                    int homeScore = _random.Next(70, 120); // Example: scores between 70 and 119
+                    int homeScore = _random.Next(70, 120);
                     int awayScore = _random.Next(70, 120);
 
-                    // Ensure there's a winner or a tie for simplicity for now
                     if (homeScore == awayScore)
                     {
-                        if (_random.Next(0, 2) == 0) homeScore++; // Randomly make one team win if tied
+                        if (_random.Next(0, 2) == 0) homeScore++;
                         else awayScore++;
                     }
 
@@ -51,12 +43,12 @@ namespace TorneosBasketBall.Services
                         EquipoLocalID = home,
                         EquipoVisitanteID = away,
                         FechaHora = matchDate,
-                        Estado = "Finalizado", // Mark as finished since scores are generated
+                        Estado = "Finalizado",
                         PuntuacionLocal = homeScore,
                         PuntuacionVisitante = awayScore
                     });
                 }
-                // rotate
+                
                 int last = teams[teams.Count - 1];
                 teams.RemoveAt(teams.Count - 1);
                 teams.Insert(1, last);

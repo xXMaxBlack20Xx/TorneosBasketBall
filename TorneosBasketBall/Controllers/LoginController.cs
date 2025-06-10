@@ -28,7 +28,7 @@ public class LoginController : Controller
             // Guardar sesión
             HttpContext.Session.SetInt32("AdminID", admin.AdministradorID);
             HttpContext.Session.SetString("AdminUsuario", admin.Usuario);
-            return RedirectToAction("Index", "Equipos"); // O a donde quieras redirigir
+            return RedirectToAction("Index", "Admin");
         }
         else
         {
