@@ -23,6 +23,36 @@
         .Skip((jugPage - 1) * playersPageSize)
         .Take(playersPageSize)
         .ToList();
+
+    //Partidos
+    const int matchesPageSize = 5;
+    var partidoPageQuery = ViewContext.HttpContext.Request.Query["partidoPage"].ToString();
+    int partidoPage = 1;
+    if (!string.IsNullOrEmpty(partidoPageQuery) && int.TryParse(partidoPageQuery, out var pp))
+    {
+        partidoPage = pp;
+    }
+    int totalPartidos = Model.Partidos.Count;
+    int totalPartPages = (int)Math.Ceiling(totalPartidos / (double)matchesPageSize);
+    var pagedPartidos = Model.Partidos
+        .Skip((partidoPage - 1) * matchesPageSize)
+        .Take(matchesPageSize)
+        .ToList();
+
+    //Estadisticas
+    const int statsPageSize = 5;
+    var statsPageQuery = ViewContext.HttpContext.Request.Query["statsPage"].ToString();
+    int statsPage = 1;
+    if (!string.IsNullOrEmpty(statsPageQuery) && int.TryParse(statsPageQuery, out var sp))
+    {
+        statsPage = sp;
+    }
+    int totalStats = Model.Estadisticas.Count;
+    int totalStatsPages = (int)Math.Ceiling(totalStats / (double)statsPageSize);
+    var pagedStats = Model.Estadisticas
+        .Skip((statsPage - 1) * statsPageSize)
+        .Take(statsPageSize)
+        .ToList();
 }
 
 <h2 class="mb-4">Tablero General del Torneo</h2>
@@ -187,7 +217,7 @@
     </ul>
 </nav>
 
-<h3>Partidos</h3>
+<h3 class="mt-5">Partidos</h3>
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -199,12 +229,12 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var partido in Model.Partidos)
+        @foreach (var partido in pagedPartidos)
         {
             <tr>
                 <td>@partido.FechaHora.ToString("dd/MM/yyyy HH:mm")</td>
-                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == partido.EquipoLocalID)?.NombreEquipo</td>
-                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == partido.EquipoVisitanteID)?.NombreEquipo</td>
+                <td>@Model.AllEquipos.FirstOrDefault(x => x.EquipoID == partido.EquipoLocalID)?.NombreEquipo</td>
+                <td>@Model.AllEquipos.FirstOrDefault(x => x.EquipoID == partido.EquipoVisitanteID)?.NombreEquipo</td>
                 <td>
                     @if (partido.PuntuacionLocal != null && partido.PuntuacionVisitante != null)
                     {
@@ -221,8 +251,51 @@
     </tbody>
 </table>
 
-<h3>Estadísticas por Equipo</h3>
-<table class="table table-bordered table-striped">
+<nav aria-label="Paginación Partidos">
+    <ul class="pagination">
+        <li class="page-item @(partidoPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action("Index", "Home", new {
+                   page        = page,
+                   equipoId    = selectedEquipo,
+                   jugPage     = jugPage,
+                   partidoPage = partidoPage - 1
+               })">
+                Anterior
+            </a>
+        </li>
+
+        @for (int m = 1; m <= totalPartPages; m++)
+        {
+            <li class="page-item @(m == partidoPage ? "active" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", "Home", new {
+                       page        = page,
+                       equipoId    = selectedEquipo,
+                       jugPage     = jugPage,
+                       partidoPage = m
+                   })">
+                    @m
+                </a>
+            </li>
+        }
+
+        <li class="page-item @(partidoPage == totalPartPages ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action("Index", "Home", new {
+                   page        = page,
+                   equipoId    = selectedEquipo,
+                   jugPage     = jugPage,
+                   partidoPage = partidoPage + 1
+               })">
+                Siguiente
+            </a>
+        </li>
+    </ul>
+</nav>
+
+<h3 class="mt-5">Estadísticas por Equipo</h3>
+<table class="table table-striped table-bordered table-hover">
     <thead>
         <tr>
             <th>Equipo</th>
@@ -234,10 +307,10 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var est in Model.Estadisticas)
+        @foreach (var est in pagedStats)
         {
             <tr>
-                <td>@Model.Equipos.FirstOrDefault(x => x.EquipoID == est.EquipoID)?.NombreEquipo</td>
+                <td>@Model.AllEquipos.First(e => e.EquipoID == est.EquipoID).NombreEquipo</td>
                 <td>@est.PartidosJugados</td>
                 <td>@est.Ganados</td>
                 <td>@est.Perdidos</td>
@@ -247,3 +320,47 @@
         }
     </tbody>
 </table>
+
+<nav aria-label="Paginación Estadísticas">
+    <ul class="pagination">
+        <li class="page-item @(statsPage == 1 ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action("Index", "Home", new {
+                   page        = page,
+                   equipoId    = selectedEquipo,
+                   jugPage     = jugPage,
+                   partidoPage = partidoPage,
+                   statsPage   = statsPage - 1
+               })">
+                Anterior
+            </a>
+        </li>
+        @for (int s = 1; s <= totalStatsPages; s++)
+        {
+            <li class="page-item @(s == statsPage ? "active" : "")">
+                <a class="page-link"
+                   href="@Url.Action("Index", "Home", new {
+                       page        = page,
+                       equipoId    = selectedEquipo,
+                       jugPage     = jugPage,
+                       partidoPage = partidoPage,
+                       statsPage   = s
+                   })">
+                    @s
+                </a>
+            </li>
+        }
+        <li class="page-item @(statsPage == totalStatsPages ? "disabled" : "")">
+            <a class="page-link"
+               href="@Url.Action("Index", "Home", new {
+                   page        = page,
+                   equipoId    = selectedEquipo,
+                   jugPage     = jugPage,
+                   partidoPage = partidoPage,
+                   statsPage   = statsPage + 1
+               })">
+                Siguiente
+            </a>
+        </li>
+    </ul>
+</nav>

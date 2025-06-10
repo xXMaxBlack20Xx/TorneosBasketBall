@@ -168,14 +168,25 @@ namespace TorneosBasketBall.Controllers
                 return RedirectToAction("Index", "Login");
 
             var equipo = await _context.Equipos.FindAsync(id);
-            if (equipo != null)
+            if (equipo == null)
+                return NotFound();
+
+            // Verifica si el equipo está relacionado con algún partido como local o visitante
+            var tienePartidos = await _context.Partidos
+                .AnyAsync(p => p.EquipoLocalID == id || p.EquipoVisitanteID == id);
+
+            if (tienePartidos)
             {
-                _context.Equipos.Remove(equipo);
+                // Agrega un mensaje de error para mostrar en la vista
+                ModelState.AddModelError("", "No puedes eliminar el equipo porque está relacionado con uno o más partidos.");
+                return View("Delete", equipo); // Devuelve la vista de confirmación con el mensaje de error
             }
 
+            _context.Equipos.Remove(equipo);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool EquipoExists(int id)
         {
