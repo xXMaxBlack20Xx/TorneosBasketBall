@@ -1,7 +1,5 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TorneosBasketBall.Servicios;
-using Microsoft.Extensions.DependencyInjection; // Ensure this namespace is included  
 
 var builder = WebApplication.CreateBuilder(args);
 
